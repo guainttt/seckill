@@ -4,16 +4,41 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd63818ab77690c49ad8dcd34389c5268
+class ComposerStaticInit1dfc651b0e60423d7841ea0b9caee723
 {
     public static $files = array (
+        '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        'b33e3d135e5d9e47d845c576147bda89' => __DIR__ . '/..' . '/php-di/php-di/src/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Psr\\Container\\' => 14,
+            'PhpDocReader\\' => 13,
+        ),
+        'O' => 
+        array (
+            'Opis\\Closure\\' => 13,
+        ),
+        'I' => 
+        array (
+            'Invoker\\' => 8,
+        ),
         'F' => 
         array (
             'FastRoute\\' => 10,
+        ),
+        'D' => 
+        array (
+            'Doctrine\\Common\\Lexer\\' => 22,
+            'Doctrine\\Common\\Annotations\\' => 28,
+            'DI\\' => 3,
+        ),
+        'C' => 
+        array (
+            'Core\\' => 5,
         ),
         'A' => 
         array (
@@ -22,9 +47,41 @@ class ComposerStaticInitd63818ab77690c49ad8dcd34389c5268
     );
 
     public static $prefixDirsPsr4 = array (
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'PhpDocReader\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-di/phpdoc-reader/src/PhpDocReader',
+        ),
+        'Opis\\Closure\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/opis/closure/src',
+        ),
+        'Invoker\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-di/invoker/src',
+        ),
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'Doctrine\\Common\\Lexer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/lexer/lib/Doctrine/Common/Lexer',
+        ),
+        'Doctrine\\Common\\Annotations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
+        ),
+        'DI\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/php-di/php-di/src',
+        ),
+        'Core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/core',
         ),
         'App\\' => 
         array (
@@ -39,9 +96,9 @@ class ComposerStaticInitd63818ab77690c49ad8dcd34389c5268
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd63818ab77690c49ad8dcd34389c5268::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd63818ab77690c49ad8dcd34389c5268::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd63818ab77690c49ad8dcd34389c5268::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1dfc651b0e60423d7841ea0b9caee723::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1dfc651b0e60423d7841ea0b9caee723::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1dfc651b0e60423d7841ea0b9caee723::$classMap;
 
         }, null, ClassLoader::class);
     }

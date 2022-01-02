@@ -5,7 +5,7 @@
       <paths name="我的小黑">
         <serverdata>
           <mappings>
-            <mapping deploy="/seckill" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/seckill/pro" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

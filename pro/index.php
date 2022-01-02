@@ -16,7 +16,7 @@ $http->on('request',function (Request $request,Response $response) use($dispatch
     
     //匹配当前的url
     //$routeInfo = $dispatcher->dispatch($request->server['request_method'],$request->server['request_uri']);
-    $myRequery = App\core\Request::init($request);
+    $myRequery = App\core废弃\Request::init($request);
     $routeInfo = $dispatcher->dispatch($myRequery->getMethod(),$myRequery->getUri());
     //$routeInfo返回一个数组，[表示是否注册过的路由,handle,参数]
     switch ($routeInfo[0]) {

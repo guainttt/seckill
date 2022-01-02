@@ -1,5 +1,5 @@
 <?php
-namespace App\core;
+namespace App\core废弃;
 class Request
 {
    protected $server = [];
