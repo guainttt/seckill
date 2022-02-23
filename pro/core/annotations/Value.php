@@ -8,5 +8,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class Value
 {
+    public $name = "";
     
 }

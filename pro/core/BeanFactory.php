@@ -14,7 +14,9 @@ class BeanFactory
     //配置文件
     private static $env=[];
     //IOC容器
-    private static  $container;
+    private static $container;
+    private static $handlers = [];
+    
     
     //初始化函数
     public static function init()
@@ -35,8 +37,29 @@ class BeanFactory
         $builder->useAnnotations(true);
         //容器初始化
         self::$container=$builder->build();
+        //self::$handlers = require_once(ROOT_PATH."/core/annotations/AnnotationHandler.php");
+        $handlers = glob(ROOT_PATH."/core/annotationhandlers/*.php");
+        foreach ($handlers as $handler){
+            self::$handlers = array_merge(self::$handlers,require_once($handler));
+        }
+        //设置注解加载类
+        $loader = require  __DIR__."/../vendor/autoload.php";
+        AnnotationRegistry::registerLoader([$loader,'loadClass']);
+        
         //扫描(重点)
-        self::ScanBeans();
+        $scans = [
+          //必须扫描的文件夹
+          ROOT_PATH."/core/init"=>"Core\\",
+          //用户配置的扫描路径
+          self::_getEnv("scan_dir",ROOT_PATH."/app")=> self::_getEnv("scan_root_namespace","APP\\")
+        ];
+        //$scanDir = self::_getEnv("scan_dir",ROOT_PATH."/app");
+        //$scanRootNamespace = self::_getEnv("scan_root_namespace","APP\\");
+        foreach ($scans as $scanDir=> $scanRootNamespace){
+            self::ScanBeans($scanDir,$scanRootNamespace);
+        }
+       
+        
         
     }
     
@@ -48,11 +71,10 @@ class BeanFactory
         return $default;
     }
     
-    public static function ScanBeans()
+    public static function ScanBeans($scanDir,$scanRootNamespace)
     {
-        $annoHandles = require_once (ROOT_PATH."/core/annotations/AnnotationHandler.php");
-        $scanDir = self::_getEnv("scan_dir",ROOT_PATH."/app");
-        $scanRootNamespace = self::_getEnv("scan_root_namespace","APP\\");
+       
+       
         //glob() 函数返回匹配指定模式的文件名或目录
         //搜索要扫描目录下的php文件 返回文件名称
         $files = glob($scanDir."/*.php");
@@ -73,12 +95,16 @@ class BeanFactory
                $classAnnos = $reader->getClassAnnotations($refClass);
                foreach ($classAnnos as $classAnno){
                    //根据注释的类型获取对应处理方法
-                   $hander = $annoHandles[get_class($classAnno)];
-                   $hander(self::$container->get($refClass->getName()),self::$container);
+                   $hander = self::$handlers[get_class($classAnno)];
+                   $instance = self::$container->get($refClass->getName());
+                   //处理属性注解
+                   self::handlerPropAnno($instance,$refClass,$reader);
+                   //处理方法注解
+                   self::handlerMethodAnno($instance,$refClass,$reader);
                    
-                   
+                   //处理类注解
+                   $hander($instance,self::$container,$classAnno);
                }
-               
            }
         }
     }
@@ -87,4 +113,42 @@ class BeanFactory
     {
         return self::$container->get($name);
     }
+    
+    private static function handlerPropAnno(&$instance,\ReflectionClass $refClass,AnnotationReader $reader)
+    {
+       //读取反射对象的属性
+        $props = $refClass->getProperties();
+        foreach ($props as $prop){
+            //$prop必须是反射对象属性
+            $propAnnos = $reader->getPropertyAnnotations($prop);
+            foreach ($propAnnos as $propAnno){
+                //返回对象实例 obj 所属类的名字。如果 obj 不是一个对象则返回 FALSE
+                $handler = self::$handlers[get_class($propAnno)];
+                $handler($prop,$instance,$propAnno);
+            }
+        }
+    }
+    
+    
+    /**
+     * 处理方法注解
+     * @param                                               $instance
+     * @param \ReflectionClass                              $refClass
+     * @param \Doctrine\Common\Annotations\AnnotationReader $reader
+     */
+    private static function handlerMethodAnno(&$instance,\ReflectionClass $refClass,AnnotationReader $reader)
+    {
+        //读取反射对象的属性
+        $methods = $refClass->getMethods();//取出所有的方法
+        foreach ($methods as $method){
+            //$prop必须是反射对象属性
+            $methodAnnos = $reader->getMethodAnnotations($method);
+            foreach ($methodAnnos as $methodAnno){
+                //返回对象实例 obj 所属类的名字。如果 obj 不是一个对象则返回 FALSE
+                $handler = self::$handlers[get_class($methodAnno)];
+                $handler($method,$instance,$methodAnno);
+            }
+        }
+    }
+    
 }

@@ -8,5 +8,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class Bean
 {
-
+    //别名
+    public $name ="";
 }
