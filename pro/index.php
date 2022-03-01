@@ -5,11 +5,17 @@ use Swoole\Http\Request;
 use Swoole\Http\Response;
 
 //注册路由
-$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r){
-   $r->addRoute('GET','/test',function (){
+/*$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r){
+   $r->addRoute('GET','/test',function (){   define
        return 'my test';
    });
-});
+});*/
+
+require_once __DIR__."/app/config/define.php";
+\Core\BeanFactory::init();
+$dispatcher = \Core\BeanFactory::getBean('RouterCollector')->getDispatcher();
+
+
 $http  = new Swoole\Http\Server("0.0.0.0",80);
 
 $http->on('request',function (Request $request,Response $response) use($dispatcher) {

@@ -22,12 +22,22 @@ class UserController
     public $version = '1.0';
     
     /**
-     * @RequestMapping(value="/user/test")
+     * @RequestMapping(value="/test")
      *
      */
     public function test()
     {
        return "路由注释";
+    }
+    
+    
+    /**
+     * @RequestMapping(value="/user/aaa")
+     *
+     */
+    public function aaa()
+    {
+        return "aaa";
     }
     
 }

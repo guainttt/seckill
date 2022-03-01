@@ -15,4 +15,16 @@ class RouterCollector
          'uri'=>$uri,
          'handler'=>$handler];
     }
+    
+    public function getDispatcher()
+    {
+        //注册路由
+        $dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r){
+            foreach($this->routes as $route){
+                $r->addRoute($route['method'],$route['uri'],$route['handler']);
+            }
+        });
+       
+        return  $dispatcher;
+    }
 }

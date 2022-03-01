@@ -12,8 +12,7 @@ return[
      $RouterCollector = BeanFactory::getBean("RouterCollector");
      
      $RouterCollector-> addRouter($requestMethod,$path,function() use($method,$instance){
-         $method->invoke($instance);//执行反射方法
-         
+         return $method->invoke($instance);//执行反射方法
      });
     
      return $instance;
