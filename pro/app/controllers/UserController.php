@@ -1,6 +1,7 @@
 <?php
 
 namespace App\controllers;
+use Core\Http\Request;
 use Core\annotations\Bean;
 use Core\annotations\Value;
 use Core\annotations\RequestMapping;
@@ -27,17 +28,30 @@ class UserController
      */
     public function test()
     {
-       return "路由注释";
+       return "...aa";
     }
     
     
     /**
-     * @RequestMapping(value="/user/aaa")
-     *
+     * @RequestMapping(value="/aaa/{uid:\d+}")
      */
     public function aaa()
     {
-        return "aaa";
+        return "aaa---";
+        
+    }
+    
+    /**
+     * @RequestMapping(value="/user/{uid:\d+}")
+     * 讲Request对象注入到
+     * $aaa 干扰参数 没什么用 冗余
+     */
+    public function user(int $bbb,Request $r,int $uid,int $aaa)
+    {
+        
+       // var_dump($r);
+        var_dump($r->getQueryParams());
+        return "bbb---".$uid;
     }
     
 }

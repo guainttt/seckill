@@ -22,26 +22,38 @@ $http->on('request',function (Request $request,Response $response) use($dispatch
     
     //匹配当前的url
     //$routeInfo = $dispatcher->dispatch($request->server['request_method'],$request->server['request_uri']);
-    $myRequery = App\core废弃\Request::init($request);
-    $routeInfo = $dispatcher->dispatch($myRequery->getMethod(),$myRequery->getUri());
+    $myRequest = \Core\http\Request::init($request);
+    
+    $routeInfo = $dispatcher->dispatch($myRequest->getMethod(),$myRequest->getUri());
     //$routeInfo返回一个数组，[表示是否注册过的路由,handle,参数]
     switch ($routeInfo[0]) {
+        //有没有这个路由
         case FastRoute\Dispatcher::NOT_FOUND:
             // ... 404 Not Found 结束响应 
             $response->status(404);
             $response->end();
             break;
+        //请求方式
         case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
             //$allowedMethods = $routeInfo[1];
             // ... 405 Method Not Allowed
             $response->status(405);
             $response->end();
             break;
+            
         case FastRoute\Dispatcher::FOUND:
             $handler = $routeInfo[1];
-            //$vars = $routeInfo[2];
+            $vars = $routeInfo[2];//参数
+            //var_dump($vars);
+           /* array(1) {
+                        ["uid"]=>
+              string(3) "123"
+            }*/
             // ... call $handler with $vars
-            $response->end($handler());
+            $extVars = [$myRequest];
+            // $vars 路由上带的参数
+            // $extVars 附加参数 传入 Request 、Response对象等
+            $response->end($handler($vars,$extVars)); //最终执行的目标方法
             break;
     }
     
