@@ -23,6 +23,8 @@ $http->on('request',function (Request $request,Response $response) use($dispatch
     //匹配当前的url
     //$routeInfo = $dispatcher->dispatch($request->server['request_method'],$request->server['request_uri']);
     $myRequest = \Core\http\Request::init($request);
+    $myResponse = \Core\http\Response::init($response);
+    
     
     $routeInfo = $dispatcher->dispatch($myRequest->getMethod(),$myRequest->getUri());
     //$routeInfo返回一个数组，[表示是否注册过的路由,handle,参数]
@@ -53,7 +55,9 @@ $http->on('request',function (Request $request,Response $response) use($dispatch
             $extVars = [$myRequest];
             // $vars 路由上带的参数
             // $extVars 附加参数 传入 Request 、Response对象等
-            $response->end($handler($vars,$extVars)); //最终执行的目标方法
+            //$response->end($handler($vars,$extVars)); //最终执行的目标方法
+            $myResponse->setBody($handler($vars,$extVars));
+            $myResponse->end();
             break;
     }
     
