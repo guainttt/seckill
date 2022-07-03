@@ -52,7 +52,7 @@ $http->on('request',function (Request $request,Response $response) use($dispatch
               string(3) "123"
             }*/
             // ... call $handler with $vars
-            $extVars = [$myRequest];
+            $extVars = [$myRequest,$myResponse];
             // $vars 路由上带的参数
             // $extVars 附加参数 传入 Request 、Response对象等
             //$response->end($handler($vars,$extVars)); //最终执行的目标方法
