@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\http;
+namespace Core\Http;
 
 
 class Response
@@ -51,7 +51,7 @@ class Response
         
     }
     
-    public function end()
+    public function end($res)
     {
         $jsonConver = ['array'];  //自动变成json格式
         $res = $this->getBody();
