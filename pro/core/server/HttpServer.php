@@ -7,9 +7,11 @@ use Swoole\Http\Server;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 
+
 class HttpServer
 {
     private $server;
+    private $dispatcher; //路由
     
     /**
      * HttpServer constructor.
@@ -48,14 +50,62 @@ class HttpServer
         //https://wiki.swoole.com/wiki/page/20.html
         //Linux信号列表
         //https://wiki.swoole.com/#/other/signal
-        require_once (__DIR__."./../../test3.php");
+        //require_once (__DIR__."./../../test3.php");
         cli_set_process_title("ttt worker"); //设置进程名称
+    
+        //把index文件里的代码搬过来
+        \Core\BeanFactory::init();
+        $this->dispatcher  = \Core\BeanFactory::getBean('RouterCollector')->getDispatcher();
+    
+    
     }
     
     public function onRequset(Request $request,Response $response)
     {
+    
+        //匹配当前的url
+        //$routeInfo = $dispatcher->dispatch($request->server['request_method'],$request->server['request_uri']);
+        $myRequest = \Core\http\Request::init($request);
+        $myResponse = \Core\http\Response::init($response);
+    
+    
+        $routeInfo = $this->dispatcher->dispatch($myRequest->getMethod(),$myRequest->getUri());
+        //$routeInfo返回一个数组，[表示是否注册过的路由,handle,参数]
+        switch ($routeInfo[0]) {
+            //有没有这个路由
+            case \FastRoute\Dispatcher::NOT_FOUND:
+                // ... 404 Not Found 结束响应
+                $response->status(404);
+                $response->end();
+                break;
+            //请求方式
+            case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+                //$allowedMethods = $routeInfo[1];
+                // ... 405 Method Not Allowed
+                $response->status(405);
+                $response->end();
+                break;
         
-        $response->end(showMe());
+            case \FastRoute\Dispatcher::FOUND:
+                $handler = $routeInfo[1];
+                $vars = $routeInfo[2];//参数
+                //var_dump($vars);
+                /* array(1) {
+                             ["uid"]=>
+                   string(3) "123"
+                 }*/
+                // ... call $handler with $vars
+                $extVars = [$myRequest,$myResponse];
+                // $vars 路由上带的参数
+                // $extVars 附加参数 传入 Request 、Response对象等
+                //$response->end($handler($vars,$extVars)); //最终执行的目标方法
+                $ret =  $handler($vars,$extVars);
+                $myResponse->setBody($ret);
+                
+                $myResponse->end();
+                break;
+        }
+        //$response->end(showMe());
     }
     
     
@@ -78,7 +128,7 @@ class HttpServer
     
     public function run()
     {
-        $p = new TestProcess();
+        $p = new TestProcess(); //文件监控
         $this->server->addProcess($p->run());
         $this->server->start();
     }

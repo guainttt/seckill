@@ -1,9 +1,14 @@
 <?php
 
+require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__."/app/config/define.php";
+
 use Core\server\HttpServer;
 use Swoole\Process;
 
-require_once __DIR__.'/vendor/autoload.php';
+
+
+
 if ($argc==2){
     $cmd = $argv[1];
     if ($cmd=='start'){

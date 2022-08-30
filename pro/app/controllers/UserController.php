@@ -29,7 +29,7 @@ class UserController
      */
     public function test()
     {
-       return "...aa";
+       return "bbb";
     }
     
     
@@ -38,7 +38,7 @@ class UserController
      */
     public function aaa()
     {
-        return "aaa---";
+        return "1aaa";
         
     }
     

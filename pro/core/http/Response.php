@@ -51,7 +51,7 @@ class Response
         
     }
     
-    public function end($res)
+    public function end()
     {
         $jsonConver = ['array'];  //自动变成json格式
         $res = $this->getBody();

@@ -12,8 +12,8 @@ use Swoole\Http\Response;
 });*/
 
 require_once __DIR__."/app/config/define.php";
-\Core\BeanFactory::init();
-$dispatcher = \Core\BeanFactory::getBean('RouterCollector')->getDispatcher();
+/*\Core\BeanFactory::init();
+$dispatcher = \Core\BeanFactory::getBean('RouterCollector')->getDispatcher();*/
 
 
 $http  = new Swoole\Http\Server("0.0.0.0",80);
@@ -24,14 +24,14 @@ $http->on('request',function (Request $request,Response $response) use($dispatch
     //$routeInfo = $dispatcher->dispatch($request->server['request_method'],$request->server['request_uri']);
     $myRequest = \Core\http\Request::init($request);
     $myResponse = \Core\http\Response::init($response);
-    
-    
+
+
     $routeInfo = $dispatcher->dispatch($myRequest->getMethod(),$myRequest->getUri());
     //$routeInfo返回一个数组，[表示是否注册过的路由,handle,参数]
     switch ($routeInfo[0]) {
         //有没有这个路由
         case FastRoute\Dispatcher::NOT_FOUND:
-            // ... 404 Not Found 结束响应 
+            // ... 404 Not Found 结束响应
             $response->status(404);
             $response->end();
             break;
@@ -42,7 +42,7 @@ $http->on('request',function (Request $request,Response $response) use($dispatch
             $response->status(405);
             $response->end();
             break;
-            
+
         case FastRoute\Dispatcher::FOUND:
             $handler = $routeInfo[1];
             $vars = $routeInfo[2];//参数
