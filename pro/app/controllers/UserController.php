@@ -11,7 +11,7 @@ use Core\http\Response;
  * Class UserController
  * 使用Bean注解加载类
  * 要用双引号！！
- * @Bean(name="abc")
+ * @Bean(name="user")
  * @package App\controllers
  */
 class UserController
@@ -29,7 +29,7 @@ class UserController
      */
     public function test()
     {
-       return "bbb";
+       return "123bbb";
     }
     
     

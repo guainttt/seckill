@@ -24,7 +24,6 @@ class RouterCollector
                 $r->addRoute($route['method'],$route['uri'],$route['handler']);
             }
         });
-       
         return  $dispatcher;
     }
 }

@@ -71,13 +71,31 @@ class BeanFactory
         return $default;
     }
     
-    public static function ScanBeans($scanDir,$scanRootNamespace)
+    /**
+     * 扫描env文件里scan_dir目录下的所有文件
+     * @param $dir
+     */
+    private static function getAllBeanFiles($dir)
     {
-       
-       
+        $ret = [];
         //glob() 函数返回匹配指定模式的文件名或目录
         //搜索要扫描目录下的php文件 返回文件名称
-        $files = glob($scanDir."/*.php");
+        $files = glob($dir."/*");
+        foreach ($files as $file){
+            if(strpos($file,'废弃')){
+               
+            }elseif(is_dir($file)){
+              //递归合并，防止数组变成嵌套数组
+              $ret = array_merge($ret,self::getAllBeanFiles($file));
+            }elseif (pathinfo($file)["extension"]=="php"){
+              $ret[] = $file;
+            }
+        }
+        return $ret;
+    }
+    public static function ScanBeans($scanDir,$scanRootNamespace)
+    {
+        $files = self::getAllBeanFiles($scanDir);
         foreach ($files as $file){
             require_once $file;
         }

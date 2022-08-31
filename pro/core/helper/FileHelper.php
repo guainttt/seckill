@@ -5,7 +5,7 @@ class FileHelper
     /**
      * 获取文件监控变化
      * @param $dir         要扫描的目录
-     * @param $ignore      忽略的目录     h
+     * @param $ignore      忽略的目录
      *
      * @return string
      */
