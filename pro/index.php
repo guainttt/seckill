@@ -12,8 +12,8 @@ use Swoole\Http\Response;
 });*/
 
 require_once __DIR__."/app/config/define.php";
-/*\Core\BeanFactory::init();
-$dispatcher = \Core\BeanFactory::getBean('RouterCollector')->getDispatcher();*/
+/*\Core\BeanFactory1111::init();
+$dispatcher = \Core\BeanFactory1111::getBean('RouterCollector')->getDispatcher();*/
 
 
 $http  = new Swoole\Http\Server("0.0.0.0",80);

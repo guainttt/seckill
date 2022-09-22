@@ -2,10 +2,16 @@
 
 namespace App\controllers;
 use Core\http\Request;
+use Core\http\Response;
+
 use Core\annotations\Bean;
 use Core\annotations\Value;
 use Core\annotations\RequestMapping;
-use Core\http\Response;
+use Core\annotations\DB;
+use Core\init\MyDB;
+
+
+
 
 /**
  * Class UserController
@@ -17,6 +23,14 @@ use Core\http\Response;
 class UserController
 {
     
+   
+    
+    /**
+     * @DB
+     * @var MyDB
+     */
+    private $db;
+    
     /**
      * @Value(name="version")
      * @var string
@@ -25,11 +39,12 @@ class UserController
     
     /**
      * @RequestMapping(value="/test")
-     *
      */
-    public function test()
+    public function test(Response $response )
     {
-       return "123bbb";
+        return $this->db->table("users")->get();
+        //return phpinfo();
+        //$response->writeHtml(phpinfo());
     }
     
     

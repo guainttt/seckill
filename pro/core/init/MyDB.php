@@ -1,20 +1,19 @@
 <?php
 namespace Core\init;
-use Core\annotations\Bean;
 use Illuminate\Database\Capsule\Manager as lvDB;
+use Core\annotations\Bean;
+
+
 
 /**
- * Class MyDB
- *
- * @package Core\init
+ * @Bean
  * @method \Illuminate\Database\Query\Builder table(string  $table,string|null  $as=null,string|null  $connection=null)
  * @method \Illuminate\Database\Query\Builder connection(string|null  $connection=null)
- *          
  */
 class MyDB
 {
-   private  $lvDB;
-   private  $dbSource;
+   public  $lvDB;
+   private  $dbSource='default';
     
     /**
      * @return mixed
@@ -30,7 +29,6 @@ class MyDB
     public function setDbSource($dbSource): void
     {
         $this->dbSource = $dbSource;
-        return;
     }
    public function __construct()
    {
@@ -39,11 +37,14 @@ class MyDB
        //但是你可以使用你自己的全局变量。
        //
        //使用关键字“global”你就可以把全局数据导入到一个函数的局部范围内。
-       global $GLOBAL_CONFIGD;
+       // $GLOBAL_CONFIGD = GLOBAL_CONFIGD;
+       global   $GLOBAL_CONFIGD;     //有时不起作用？？重启一下服务器又好了 
        //default 为默认数据源
        if (isset($GLOBAL_CONFIGD['db'])){
+          
            $configs = $GLOBAL_CONFIGD['db'];
            $this->lvDB = new  LvDb();
+           
            //创建连接
            foreach ($configs as $key =>$config){
                $this->lvDB->addConnection($config,$key);
@@ -53,18 +54,21 @@ class MyDB
            //启动Eloquent
            $this->lvDB->bootEloquent();
        }
+       
    }
+   
+   
+
    
    //__call()，这个方法用来监视一个对象中的其它方法。
     ////如果你试着调用一个对象中不存在或被权限控制中的方法，
     //__call 方法将会被自动调用。
    public  function __call($methodName, $arguments)
    {
+       //$routerCollector= \Core\BeanFactory1111::getBean("RouterCollector");
+     
        // TODO: Implement __call() method.
-       //用。。。解构数组
-
-       //return $this->lvDB::$methodName(...$arguments);
-       return $this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
+      return $this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
        
    }
 }

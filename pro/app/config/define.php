@@ -5,3 +5,4 @@ $GLOBAL_CONFIGD= [
     'db'=> require_once (__DIR__."/db.php"),
     'redis'=>[]
 ] ;
+//define("GLOBAL_CONFIGD",$GLOBAL_CONFIGD);

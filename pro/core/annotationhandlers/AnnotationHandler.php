@@ -29,7 +29,7 @@ return [
         //setValue(object $object, mixed $value) ReflectionProperty类内置方法
         //$reflectionClass->getProperty('property')->setValue($foo, 'bar');
         $prop->setValue($instance,$env[$propAnno->name]);
-        
+        return $instance;
     }
 ];
 
