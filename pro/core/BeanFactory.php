@@ -129,7 +129,17 @@ class BeanFactory
     
     public static function getBean($name)
     {
-        return self::$container->get($name);
+        try{
+            return self::$container->get($name);
+        }catch (\Exception $exception){
+            return false;//没有找到直接返回false
+        }
+        
+    }
+    
+    public static function setBean($name,$value)
+    {
+        return self::$container->set($name,$value);
     }
     
     private static function handlerPropAnno(&$instance,\ReflectionClass $refClass,AnnotationReader $reader)
@@ -138,10 +148,28 @@ class BeanFactory
         $props = $refClass->getProperties();
         foreach ($props as $prop){
             //$prop必须是反射对象属性
+    
+            //var_dump($propAnno);exit;
+            //-object(Core\annotations\DB)#55 (1) {
+            //  ["source"]=>
+            //  string(6) "docker"
+            //}
+            
+            
+            //var_dump($prop);
+            //object(ReflectionProperty)#39 (2) {
+            //  ["name"]=>
+            //  string(4) "lvDB"
+            //  ["class"]=>
+            //  string(14) "Core\init\MyDB"
+            //}
             $propAnnos = $reader->getPropertyAnnotations($prop);
             foreach ($propAnnos as $propAnno){
                 //返回对象实例 obj 所属类的名字。如果 obj 不是一个对象则返回 FALSE
                 $handler = self::$handlers[get_class($propAnno)];
+                
+                
+                
                 $handler($prop,$instance,$propAnno);
             }
         }

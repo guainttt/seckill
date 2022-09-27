@@ -19,6 +19,7 @@ use Core\init\MyDB;
  * 要用双引号！！
  * @Bean(name="user")
  * @package App\controllers
+ * //Spring的@Bean注解用于告诉方法，产生一个Bean对象，然后这个Bean对象交给Spring管理。产生这个Bean对象的方法Spring只会调用一次，随后这个Spring将会将这个Bean对象放在自己的IOC容器中；
  */
 class UserController
 {
@@ -26,10 +27,16 @@ class UserController
    
     
     /**
-     * @DB
+     * @DB(source ="default")
      * @var MyDB
      */
-    private $db;
+    private $db1;
+    
+    /**
+     * @DB(source ="docker")
+     * @var MyDB
+     */
+    private $db2;
     
     /**
      * @Value(name="version")
@@ -42,11 +49,19 @@ class UserController
      */
     public function test(Response $response )
     {
-        return $this->db->table("users")->get();
-        //return phpinfo();
-        //$response->writeHtml(phpinfo());
+        $arr =  $this->db1->table("users",'u')->get();
+        return $arr;
     }
     
+    
+    /**
+     * @RequestMapping(value="/test3")
+     */
+    public function test3(Response $response )
+    {
+        $arr =  $this->db2->table("users",'u')->get();
+        return $arr;
+    }
     
     /**
      * @RequestMapping(value="/aaa/{uid:\d+}")

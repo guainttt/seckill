@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 /**
  * @Annotation
  * @Target({"PROPERTY"})
+ *            属性注解
  */
 class DB
 {

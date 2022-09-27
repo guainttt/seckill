@@ -13,7 +13,9 @@ use Core\annotations\Bean;
 class MyDB
 {
    public  $lvDB;
-   private  $dbSource='default';
+   //会被DB的属性注解覆盖
+   private  $dbSource='default'; 
+ 
     
     /**
      * @return mixed
@@ -65,10 +67,10 @@ class MyDB
     //__call 方法将会被自动调用。
    public  function __call($methodName, $arguments)
    {
-       //$routerCollector= \Core\BeanFactory1111::getBean("RouterCollector");
-     
        // TODO: Implement __call() method.
-      return $this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
-       
+       if ($methodName=='table' && $arguments[2]){
+           return $this->lvDB::$methodName(...$arguments);
+       }
+       return $this->lvDB::connection($this->dbSource)->$methodName(...$arguments);
    }
 }
