@@ -1,6 +1,7 @@
 <?php
 
 namespace App\controllers;
+use App\models\Users;
 use Core\http\Request;
 use Core\http\Response;
 
@@ -9,6 +10,8 @@ use Core\annotations\Value;
 use Core\annotations\RequestMapping;
 use Core\annotations\DB;
 use Core\init\MyDB;
+
+
 
 
 
@@ -49,8 +52,9 @@ class UserController
      */
     public function test(Response $response )
     {
-        $arr =  $this->db1->table("users",'u')->get();
-        return $arr;
+//        $arr =  $this->db1->table("users",'u')->get();
+//        return $arr;
+        return Users::first();
     }
     
     
